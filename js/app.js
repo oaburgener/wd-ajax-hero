@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const movies = [];
+  var movies = [];
 
   const renderMovies = function() {
     $('#listings').empty();
@@ -56,5 +56,40 @@
     }
   };
 
-  // ADD YOUR CODE HERE
+  $('form').submit(function(event){
+    event.preventDefault()
+
+  });
+
+  $('button').on('click', function(){
+    let $input = $('#search')[0].value;
+    if ($('#search')[0].value === ""){
+      alert("Please enter a valid movie")
+    }
+    $('#search')[0].value = "";
+
+
+      // console.log($input)
+
+      var $xhr = $.getJSON("https:omdb-api.now.sh/?s=" + $input);
+      $xhr.done(function(data){
+        // console.log("data = ", data)
+
+        for(var i = 0; i < data.Search.length; i++){
+          var obj = {
+            "poster" : data.Search[i].Poster,
+            "id" : data.Search[i].imdbID,
+            "title" : data.Search[i].Title,
+            "year" : data.Search[i].Year
+          }
+          movies.push(obj);
+
+        }
+         console.log(movies);
+      renderMovies(movies)
+      movies = [];
+
+      });
+  });
+
 })();
